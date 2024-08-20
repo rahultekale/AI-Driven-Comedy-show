@@ -1,0 +1,31 @@
+package com.example.comedyapp;
+
+import okhttp3.*;
+import org.springframework.web.bind.annotation.*;
+import java.io.IOException;
+
+@RestController
+public class ComedyController {
+
+    private static final String OPENAI_API_KEY = "your-openai-api-key";
+
+    @PostMapping("/generate")
+    public String generateComedy(@RequestBody PromptRequest promptRequest) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+
+        String json = "{\"prompt\": \"" + promptRequest.getPrompt() + "\", \"max_tokens\": 150, \"temperature\": 0.7}";
+
+        RequestBody body = RequestBody.create(
+            MediaType.parse("application/json"), json);
+
+        Request request = new Request.Builder()
+            .url("https://api.openai.com/v1/completions")
+            .addHeader("Authorization", "Bearer " + OPENAI_API_KEY)
+            .post(body)
+            .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            return response.body().string();
+        }
+    }
+}

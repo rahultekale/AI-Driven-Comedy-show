@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven Comedy Show Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AI-Driven Comedy Show Generator</h1>
+        <textarea id="prompt" placeholder="Enter a prompt..."></textarea>
+        <button onclick="generateComedy()">Generate Comedy</button>
+        <div id="comedyOutput"></div>
+    </div>
+
+    <script>
+        function generateComedy() {
+            const prompt = document.getElementById('prompt').value;
+
+            fetch('/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ prompt: prompt })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const comedyText = data.choices[0].text.trim();
+                document.getElementById('comedyOutput').innerText = comedyText;
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
